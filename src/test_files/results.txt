@@ -1,0 +1,2 @@
+NTCIR11-Math-1 xxx 02459 4.0
+NTCIR11-Math-1 xxx 27473 0.0
