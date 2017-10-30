@@ -15,17 +15,30 @@ def calculate_distances(query, tf_dictionary):
             pass
     # remove any terms that are not present
     positions = [pos for pos in positions if len(pos) > 0]
-    pairs = calculate_pairs(positions)
-    span_distance = span(positions)
-    min_span_distance = min_span(positions)
-    return (span_distance,
-            min_span_distance,
-            span_distance / sum([len(pos) for pos in positions]),
-            min_span_distance / len(positions),
-            min(pairs),
-            average_pairs(pairs),
-            max(pairs)
-            )
+    print(positions)
+    if len(positions) > 1:
+        pairs = calculate_pairs(positions)
+        span_distance = span(positions)
+        min_span_distance = min_span(positions)
+        result = (span_distance,
+                  min_span_distance,
+                  span_distance / sum([len(pos) for pos in positions]),
+                  min_span_distance / len(positions),
+                  min(pairs),
+                  average_pairs(pairs),
+                  max(pairs))
+    else:
+        # just assume the size of the document
+        doc_size = sum([len(tf_dictionary[key])
+                        for key in tf_dictionary.keys()])
+        result = (doc_size,
+                  doc_size,
+                  doc_size,
+                  doc_size,
+                  doc_size,
+                  doc_size,
+                  doc_size)
+    return result
 
 
 def calculate_pairs(positions):
@@ -59,6 +72,8 @@ def min_span(positions):
     spans = []
     start = 0
     end = max([max(pos) for pos in positions])
+    if start == end:
+        spans.append(0)
     while start < end:
         try:
             span_start = min([min(pos) for pos in positions])
@@ -96,6 +111,17 @@ class TestCalculateDistance(unittest.TestCase):
         self.assertEquals(ad, 8 / 3)
         self.assertEquals(lr, 5)
 
+    def testCalculateDistancesEmpty(self):
+        self.q = QueryMock("d")
+        (s, m, ns, nm, sd, ad, lr) = calculate_distances(self.q, self.d)
+        self.assertEquals(s, 6)
+        self.assertEquals(m, 6)
+        self.assertEquals(ns, 6)
+        self.assertEquals(nm, 6)
+        self.assertEquals(sd, 6)
+        self.assertEquals(ad, 6)
+        self.assertEquals(lr, 6)
+
 
 class TestBasicFunctions(unittest.TestCase):
     def setUp(self):
@@ -113,6 +139,9 @@ class TestBasicFunctions(unittest.TestCase):
         self.assertEquals(min_span(self.pos1), 0)
         self.assertEquals(min_span(self.pos2), 2)
         self.assertEquals(min_span(self.pos3), 2)
+
+    def testMinSpan2(self):
+        self.assertEquals(min_span([[0], [0]]), 0)
 
     def testSpan(self):
         self.assertEquals(span(self.pos1), 7)
@@ -133,7 +162,6 @@ class TestBasicFunctions(unittest.TestCase):
         self.assertEqual(average_pairs([4, 2, 6]), 4)
 
 
-
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

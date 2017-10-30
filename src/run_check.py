@@ -33,7 +33,7 @@ def run_check(output_file,
         formula_bags: whether to treat formulas as bags of words
         keep_words: whether to keep the words or not
         keep_math: whether to keep the math formulas or not
-result    """
+    """
     with open(output_file, "w+") as out:
         analyzer = Analyzer(formula_bags=formula_bags,
                             keep_words=keep_words,
@@ -65,10 +65,11 @@ result    """
 
 
 def lookup_relevant(score):
+    """Returns the string classifcation of the score"""
     category = ""
     if score >= 2.0:
         category = "RELEVANT"
-    elif score >= 0.0:
+    elif score > 0.0:
         category = "PARTIALLY RELEVANT"
     else:
         category = "NOT RELEVANT"
@@ -121,4 +122,4 @@ if __name__ == "__main__":
               ext=args.ext,
               formula_bags=args.formula_bags,
               keep_words=args.no_words,
-              kee_math=args.no_math)
+              keep_math=args.no_math)

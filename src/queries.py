@@ -29,6 +29,7 @@ class Queries():
     def get_queries(self):
         return self.queries
 
+
 class Query():
     def __init__(self, topic, analyzer=Analyzer()):
         """Query: the NTCIR-MathIR query

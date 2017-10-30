@@ -168,7 +168,9 @@ class Analyzer():
             elif token == "(end)" or token == "#(end)#":
                 # do nothing
                 pass
-            elif self.is_math_token(token):
+            elif (self.is_math_token(token) and
+                  len(new_tokens) > 0 and
+                  isinstance(new_tokens[-1], list)):
                 new_tokens[-1].append(token)
             else:
                 new_tokens.append(token)
