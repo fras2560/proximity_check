@@ -6,7 +6,7 @@ Created on Oct 26, 2017
 from queries import Queries
 from results import Results
 from document import Document, Analyzer
-from distances import calculate_distances
+from distances import calculate_distances, DistancesUndefinedException
 from tqdm import tqdm
 import os
 import argparse
@@ -42,6 +42,7 @@ def run_check(output_file,
         results = Results(results)
         print("{},{},{},{},{},{},{},{},{}".format("Query",
                                                   "Document",
+                                                  "Doc-Length",
                                                   "Ranking",
                                                   "Span",
                                                   "Min-Span",
@@ -50,18 +51,29 @@ def run_check(output_file,
                                                   "Min-Distance",
                                                   "Ave-Distance",
                                                   "Max-Distance"), file=out)
+        undefined_docs = []
         for q in tqdm(range(0, len(queries))):
             query = queries[q]
             for doc in results.documents_for_query(query):
                 document = Document(os.path.join(documents, doc + ext))
                 (tf_dic, __) = document.lookup_dictionaries(analyzer)
-                dist = calculate_distances(query, tf_dic)
                 relevant = lookup_relevant(results.find_score(query, doc))
-                print("{},{},{},{}".format(query,
-                                           document,
-                                           relevant,
-                                           ",".join([str(d) for d in dist])),
+                try:
+                    dist = calculate_distances(query, tf_dic)
+                    doc_length = sum([len(tf_dic[key])
+                                      for key in tf_dic.keys()])
+                    print("{},{},{},{}".format(query,
+                                               document,
+                                               doc_length,
+                                               relevant,
+                                               ",".join([str(d)
+                                                         for d in dist])),
                       file=out)
+                except DistancesUndefinedException:
+                    undefined_docs.append((document, relevant))
+        print("Documents with undefined Distances")
+        for doc in undefined_docs:
+            print("{}:{}".format(doc[0], doc[1])
 
 
 def lookup_relevant(score):

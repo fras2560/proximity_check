@@ -14,6 +14,8 @@ def run_normalize(in_file, out_file):
         header = f.readline().strip().split(",")
         query_header = header.index("Query")
         document_header = header.index("Document")
+        doc_length_header = header.index("Doc-Length")
+        # build up the
         for line in f:
             parts = line.strip().split(",")
             print(parts)
@@ -25,7 +27,9 @@ def run_normalize(in_file, out_file):
         # now normalize all the values
         for measurement in range(header.index("Ranking") + 1, len(header)):
             for query in queries.keys():
-                queries[query] = normalize_values(queries[query], measurement)
+                queries[query] = normalize_values(queries[query],
+                                                  measurement,
+                                                  doc_length_header)
         # now output the to the other file
         with open(out_file, "w+") as h:
             print(",".join(header), file=h)
@@ -35,25 +39,12 @@ def run_normalize(in_file, out_file):
                     print(",".join(temp), file=h)
 
 
-def normalize_values(documents, measurement):
-    max_value = 0
-    min_value = sys.maxsize
-    # find the max and min
-    for document_name, values in documents.items():
-        print(measurement, document_name, values)
-        value = float(values[measurement])
-        if value > max_value:
-            max_value = value
-        if value < min_value:
-            min_value = value
-    # now normalize those values
+def normalize_values(documents, measurement, doc_length_index):
+    # normalize by doc length
     for key in documents.keys():
-        if min_value != max_value:
-            value = float(documents[key][measurement])
-            documents[key][measurement] = ((value - min_value) /
-                                           (max_value - min_value))
-        else:
-            documents[key][measurement] = 0
+        value = float(documents[key][measurement])
+        doc_length = float(documents[key][doc_length_index]
+        documents[key][measurement] = value / doc_length
     return documents
 
 

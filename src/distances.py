@@ -6,6 +6,13 @@ Created on Oct 26, 2017
 import unittest
 
 
+class DistancesUndefinedException(Exception):
+    MESSAGE = "Distances are undefined for documents matching one term"
+
+    def __init__(self, message):
+        self.message = message
+
+
 def calculate_distances(query, tf_dictionary):
     positions = []
     for term in query.get_terms():
@@ -15,7 +22,6 @@ def calculate_distances(query, tf_dictionary):
             pass
     # remove any terms that are not present
     positions = [pos for pos in positions if len(pos) > 0]
-    print(positions)
     if len(positions) > 1:
         pairs = calculate_pairs(positions)
         span_distance = span(positions)
@@ -29,15 +35,8 @@ def calculate_distances(query, tf_dictionary):
                   max(pairs))
     else:
         # just assume the size of the document
-        doc_size = sum([len(tf_dictionary[key])
-                        for key in tf_dictionary.keys()])
-        result = (doc_size,
-                  doc_size,
-                  doc_size,
-                  doc_size,
-                  doc_size,
-                  doc_size,
-                  doc_size)
+        # let the programmer decide how to deal with this
+        raise DistancesUndefinedException(DistancesUndefinedException.MESSAGE)
     return result
 
 
