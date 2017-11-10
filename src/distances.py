@@ -112,14 +112,12 @@ class TestCalculateDistance(unittest.TestCase):
 
     def testCalculateDistancesEmpty(self):
         self.q = QueryMock("d")
-        (s, m, ns, nm, sd, ad, lr) = calculate_distances(self.q, self.d)
-        self.assertEquals(s, 6)
-        self.assertEquals(m, 6)
-        self.assertEquals(ns, 6)
-        self.assertEquals(nm, 6)
-        self.assertEquals(sd, 6)
-        self.assertEquals(ad, 6)
-        self.assertEquals(lr, 6)
+        try:
+            calculate_distances(self.q, self.d)
+            self.assertEquals(True, False,
+                              "Distance is undefined for this type of query")
+        except DistancesUndefinedException:
+            pass
 
 
 class TestBasicFunctions(unittest.TestCase):

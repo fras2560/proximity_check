@@ -19,7 +19,8 @@ class Document():
         self.path = path
         self.words = convert_file_to_words(path,
                                            eol=True,
-                                           synonyms=True)
+                                           synonyms=True,
+                                           no_payload=True)
 
     def __str__(self):
         return os.path.basename(self.path)

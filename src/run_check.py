@@ -41,16 +41,17 @@ def run_check(output_file,
         queries = Queries(queries).get_queries()
         results = Results(results)
         print("{},{},{},{},{},{},{},{},{},{},{}".format("Query",
-                                                  "Document",
-                                                  "Doc-Length",
-                                                  "Ranking",
-                                                  "Span",
-                                                  "Min-Span",
-                                                  "Normalized-Span",
-                                                  "Normalized-Min-Span",
-                                                  "Min-Distance",
-                                                  "Ave-Distance",
-                                                  "Max-Distance"), file=out)
+                                                        "Document",
+                                                        "Doc-Length",
+                                                        "Ranking",
+                                                        "Span",
+                                                        "Min-Span",
+                                                        "Normalized-Span",
+                                                        "Normalized-Min-Span",
+                                                        "Min-Distance",
+                                                        "Ave-Distance",
+                                                        "Max-Distance"),
+              file=out)
         undefined_docs = []
         for q in tqdm(range(0, len(queries))):
             query = queries[q]
@@ -63,12 +64,12 @@ def run_check(output_file,
                     doc_length = sum([len(tf_dic[key])
                                       for key in tf_dic.keys()])
                     print("{},{},{},{},{}".format(query,
-                                               document,
-                                               doc_length,
-                                               relevant,
-                                               ",".join([str(d)
-                                                         for d in dist])),
-                      file=out)
+                                                  document,
+                                                  doc_length,
+                                                  relevant,
+                                                  ",".join([str(d)
+                                                            for d in dist])),
+                          file=out)
                 except DistancesUndefinedException:
                     undefined_docs.append((document, relevant, query))
         print("Documents with undefined Distances")

@@ -45,7 +45,8 @@ class Query():
         formulas = []
         for formula in topic.find_all("formula"):
             formulas += convert_math_expression(str(formula),
-                                                eol=True).split(" ")
+                                                eol=True,
+                                                no_payload=True).split(" ")
         formulas = analyzer.factory_token_filter(formulas, query=True)
         self.result = keywords + formulas
         self.name = topic.num.text

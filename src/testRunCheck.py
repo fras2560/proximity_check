@@ -32,6 +32,7 @@ class Test(unittest.TestCase):
         with open(self.output) as f:
             lines = 0
             for __ in f:
+                print(__)
                 lines += 1
             self.assertEqual(lines, 3)
 
