@@ -40,7 +40,7 @@ def run_check(output_file,
                             keep_math=keep_math)
         queries = Queries(queries).get_queries()
         results = Results(results)
-        print("{},{},{},{},{},{},{},{},{}".format("Query",
+        print("{},{},{},{},{},{},{},{},{},{},{}".format("Query",
                                                   "Document",
                                                   "Doc-Length",
                                                   "Ranking",
@@ -62,7 +62,7 @@ def run_check(output_file,
                     dist = calculate_distances(query, tf_dic)
                     doc_length = sum([len(tf_dic[key])
                                       for key in tf_dic.keys()])
-                    print("{},{},{},{}".format(query,
+                    print("{},{},{},{},{}".format(query,
                                                document,
                                                doc_length,
                                                relevant,
@@ -70,10 +70,10 @@ def run_check(output_file,
                                                          for d in dist])),
                       file=out)
                 except DistancesUndefinedException:
-                    undefined_docs.append((document, relevant))
+                    undefined_docs.append((document, relevant, query))
         print("Documents with undefined Distances")
         for doc in undefined_docs:
-            print("{}:{}".format(doc[0], doc[1])
+            print("{}:{}:{}".format(doc[2], doc[0], doc[1]))
 
 
 def lookup_relevant(score):

@@ -5,7 +5,7 @@ Created on Oct 31, 2017
 '''
 import unittest
 import argparse
-K_VALUES = [1, 2, 3,]
+K_VALUES = [1, 2, 3]
 RELEVANT = ["RELEVANT", "PARTIALLY RELEVANT"]
 
 
@@ -29,7 +29,7 @@ def run_ranking(in_file, out_file):
         # now check all measurements maps against random selecting a document
         for query in queries.keys():
             results[query] = [query]
-            for measurement in range(header.index("Ranking") + 1, len(header)):
+            for measurement in range(relevant_header + 1, len(header)):
                 # what are the documents
                 documents = [document
                              for __, document in queries[query].items()]
