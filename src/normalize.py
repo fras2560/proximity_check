@@ -25,6 +25,7 @@ def run_normalize(in_file, out_file):
                 queries[query_name] = {}
             queries[query_name][document_name] = parts
         # now normalize all the values
+        print(header.index("Ranking"))
         for measurement in range(header.index("Ranking") + 1, len(header)):
             for query in queries.keys():
                 queries[query] = normalize_values(queries[query],
@@ -42,8 +43,9 @@ def run_normalize(in_file, out_file):
 def normalize_values(documents, measurement, doc_length_index):
     # normalize by doc length
     for key in documents.keys():
+        print(documents[key])
         value = float(documents[key][measurement])
-        doc_length = float(documents[key][doc_length_index]
+        doc_length = float(documents[key][doc_length_index])
         documents[key][measurement] = value / doc_length
     return documents
 

@@ -56,22 +56,25 @@ def run_check(output_file,
         for q in tqdm(range(0, len(queries))):
             query = queries[q]
             for doc in results.documents_for_query(query):
-                document = Document(os.path.join(documents, doc + ext))
-                (tf_dic, __) = document.lookup_dictionaries(analyzer)
-                relevant = lookup_relevant(results.find_score(query, doc))
                 try:
-                    dist = calculate_distances(query, tf_dic)
-                    doc_length = sum([len(tf_dic[key])
-                                      for key in tf_dic.keys()])
-                    print("{},{},{},{},{}".format(query,
-                                                  document,
-                                                  doc_length,
-                                                  relevant,
-                                                  ",".join([str(d)
-                                                            for d in dist])),
-                          file=out)
-                except DistancesUndefinedException:
-                    undefined_docs.append((document, relevant, query))
+                    document = Document(os.path.join(documents, doc + ext))
+                    (tf_dic, __) = document.lookup_dictionaries(analyzer)
+                    relevant = lookup_relevant(results.find_score(query, doc))
+                    try:
+                        dist = calculate_distances(query, tf_dic)
+                        doc_length = sum([len(tf_dic[key])
+                                          for key in tf_dic.keys()])
+                        print("{},{},{},{},{}".format(query,
+                                                      document,
+                                                      doc_length,
+                                                      relevant,
+                                                      ",".join([str(d)
+                                                                for d in dist])),
+                              file=out)
+                    except DistancesUndefinedException:
+                        undefined_docs.append((document, relevant, query))
+                except FileNotFoundError:
+                    print("Error in opening document: {}".format(doc))
         print("Documents with undefined Distances")
         for doc in undefined_docs:
             print("{}:{}:{}".format(doc[2], doc[0], doc[1]))
@@ -80,7 +83,7 @@ def run_check(output_file,
 def lookup_relevant(score):
     """Returns the string classifcation of the score"""
     category = ""
-    if score >= 2.0:
+    if score > 2.0:
         category = "RELEVANT"
     elif score > 0.0:
         category = "PARTIALLY RELEVANT"

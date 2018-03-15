@@ -46,6 +46,7 @@ def run_ranking(in_file, out_file):
         with open(out_file, "w+") as h:
             header.pop(header.index("Document"))
             header.pop(header.index("Ranking"))
+            header.pop(header.index("Doc-Length"))
             print(",".join(header), file=h)
             for query in results.keys():
                 values = results[query]
@@ -79,15 +80,11 @@ def calculate_map(documents, values, index):
 
 
 class Test(unittest.TestCase):
-
-
     def setUp(self):
         pass
 
-
     def tearDown(self):
         pass
-
 
     def testName(self):
         pass
